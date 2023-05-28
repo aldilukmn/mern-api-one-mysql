@@ -1,10 +1,11 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
+import users from "./users.js";
 
 const { DataTypes } = Sequelize;
 
-const users = db.define(
-  "users",
+const blogs = db.define(
+  "blogs",
   {
     uuid: {
       type: DataTypes.STRING,
@@ -14,33 +15,27 @@ const users = db.define(
         notEmpty: true,
       },
     },
-    username: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [5, 100],
       },
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        isEmail: true,
-      },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    refresh_token: {
+    body: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    role: {
-      type: DataTypes.STRING,
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
   },
   {
@@ -48,4 +43,7 @@ const users = db.define(
   }
 );
 
-export default users;
+users.hasMany(blogs);
+blogs.belongsTo(users, { foreignKey: "userId" });
+
+export default blogs;

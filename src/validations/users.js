@@ -25,6 +25,30 @@ export const validationRegister = [
       if (value !== req.body.confirmPassword) {
         throw new Error("Password and Confirm Password do not match!");
       }
-      return true
+      return true;
+    })
+    .custom((value) => {
+      if (/\s/.test(value)) {
+        throw new Error("Password should not contain spaces");
+      }
+      return true;
+    }),
+];
+
+export const validationLogin = [
+  check("username")
+    .notEmpty()
+    .trim()
+    .withMessage("Username is required!")
+    .matches(/^[a-zA-Z0-9]*[a-zA-Z][a-zA-Z0-9]*$/)
+    .withMessage("Invalid username format!"),
+  check("password")
+    .notEmpty()
+    .withMessage("Password is required!")
+    .custom((value) => {
+      if (/\s/.test(value)) {
+        throw new Error("Password should not contain spaces");
+      }
+      return true;
     }),
 ];
